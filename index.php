@@ -49,14 +49,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h2>Resultados Gerados para o RM: <?= $resultadoCalculo['rm'] ?></h2>
 
             <div class="resultado">
-                <h3>1. Recursos Iniciais Salvos no JSON:</h3>
+                <h3>1. Recursos Iniciais:</h3>
                 <p><strong>Energia:</strong> <?= $resultadoCalculo['energia'] ?></p>
                 <p><strong>Água:</strong> <?= $resultadoCalculo['agua'] ?></p>
                 <p><strong>Combustível:</strong> <?= $resultadoCalculo['combustivel'] ?></p>
             </div>
 
             <div class="resultado resultado-montanha">
-                <h3>2. Resultado da Fase Montanha:</h3>
+                <h3>2. Resultado do Desafio:</h3>
                 <p><strong>Status:</strong> <?= $resultadoFase['status'] ?></p>
                 <p><strong>Energia Restante:</strong> <?= $resultadoFase['energia_final'] ?></p>
                 <p><strong>Água Restante:</strong> <?= $resultadoFase['agua_final'] ?></p>
