@@ -1,28 +1,28 @@
 <?php
-// Inclui o arquivo que contém a lógica de cálculos e regras de negócio
+// Inclui o arquivo de funções
 require_once 'funções.php';
 
-// Inicializa as variáveis de controle como nulas
 $resultadoCalculo = null;
 $resultadoFase = null;
 
-// Verifica se o formulário foi enviado via método POST
+// Verifica se o formulário foi enviado
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Valida se o RM foi preenchido e o converte para inteiro
     if (isset($_POST['rm']) && !empty($_POST['rm'])) {
         $rm = intval($_POST['rm']);
         
-        // Calcula os recursos iniciais da matrícula e salva no arquivo JSON
-        $resultadoCalculo = calcularRecursosIniciais($rm);
-        salvarDadosJson($resultadoCalculo);
+        // 1. Calcula os recursos baseados no seu RM
+        $recursosIniciais = calcularRecursosIniciais($rm);
         
-        // Definição dos parâmetros do cenário da montanha (Desafio Único)
-        $distancia = 50;
-        $dificuldade = 3;
-        $altitude = 1500;
+        // 2. Cria e salva o arquivo JSON estruturado com os recursos e os dados da fase
+        salvarDadosJson($recursosIniciais);
         
-        // Processa os gastos da viagem e valida as condições especiais
-        $resultadoFase = processarFaseMontanha($resultadoCalculo, $distancia, $dificuldade, $altitude);
+        // 3. Lê o arquivo JSON que acabou de ser gravado para garantir a integridade dos dados
+        $conteudoJson = file_get_contents(__DIR__ . '/../dados/missão.json');
+        $dadosDoJson = json_decode($conteudoJson, true);
+        
+        // 4. Executa a fase da montanha lendo as informações vindas de dentro do arquivo JSON
+        $resultadoCalculo = $dadosDoJson; // Guarda a estrutura do JSON para exibir na tela
+        $resultadoFase = processarFaseMontanha($dadosDoJson);
     }
 }
 ?>
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Desafio</title>
+    <title>Desafio - Fase Montanha</title>
     <link rel="stylesheet" href="estilo.css">
 </head>
 <body>
@@ -50,13 +50,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="resultado">
                 <h3>1. Recursos Iniciais:</h3>
-                <p><strong>Energia:</strong> <?= $resultadoCalculo['energia'] ?></p>
-                <p><strong>Água:</strong> <?= $resultadoCalculo['agua'] ?></p>
-                <p><strong>Combustível:</strong> <?= $resultadoCalculo['combustivel'] ?></p>
+                <p><strong>Energia:</strong> <?= $resultadoCalculo['recursos']['energia'] ?></p>
+                <p><strong>Água:</strong> <?= $resultadoCalculo['recursos']['agua'] ?></p>
+                <p><strong>Combustível:</strong> <?= $resultadoCalculo['recursos']['combustivel'] ?></p>
             </div>
 
             <div class="resultado resultado-montanha">
-                <h3>2. Resultado do Desafio:</h3>
+                <h3>2. Resultado da Fase Montanha:</h3>
+                <p><strong>Cenário:</strong> <?= $resultadoCalculo['fase']['nome'] ?> (Distância: <?= $resultadoCalculo['fase']['distancia'] ?>km)</p>
                 <p><strong>Status:</strong> <?= $resultadoFase['status'] ?></p>
                 <p><strong>Energia Restante:</strong> <?= $resultadoFase['energia_final'] ?></p>
                 <p><strong>Água Restante:</strong> <?= $resultadoFase['agua_final'] ?></p>
