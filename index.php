@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Desafio - Fase Montanha</title>
+    <title>Desafio</title>
     <link rel="stylesheet" href="estilo.css">
 </head>
 <body>
